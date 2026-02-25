@@ -12,14 +12,12 @@
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXXXXX');
   </script>
-
 </head>
+
 <body>
 
-  <h1>Helping Hand Donation Demo</h1>
-  <p>This page demonstrates Fundraise Up + GA4 integration.</p>
+  <h1>Helping Hand</h1>
 
-  <!-- Fundraise Up Widget -->
   <script>
   (function(w,d,s,n,a){
   if(!w[n]){
@@ -36,52 +34,37 @@
   })(window,document,'script','FundraiseUp','AEMZUDUM');
   </script>
 
-  <!-- Donation Button -->
   <a href="#XJKDHSTQ">Donate Now</a>
 
-  <br><br>
-
-  <!-- Safe demo button (если donationComplete не срабатывает) -->
-  <button onclick="simulatePurchase()">Simulate $700 Donation</button>
-
   <script>
-  function simulatePurchase() {
-    gtag('event', 'purchase', {
-      transaction_id: 'TEST700',
-      value: 700,
-      currency: 'USD'
-    });
-  }
-  </script>
+    function initFundraiseTracking() {
 
-  <!-- Event Tracking -->
-  <script>
-  document.addEventListener("DOMContentLoaded", function() {
-
-    // Checkout open event
-    FundraiseUp.on('checkoutOpen', function() {
-      console.log("Checkout opened");
-
-      gtag('event', 'checkout_open', {
-        event_category: 'FundraiseUp',
-        event_label: 'Checkout Opened'
-      });
-    });
-
-    // Native donation complete event (работает только если есть backend confirmation)
-    FundraiseUp.on('donationComplete', function(data) {
-
-      console.log("Donation complete:", data);
-
-      gtag('event', 'purchase', {
-        transaction_id: data.donation.id,
-        value: data.donation.amount / 100,
-        currency: data.donation.currency
+      FundraiseUp.on('checkoutOpen', function() {
+        gtag('event', 'checkout_open', {
+          event_category: 'FundraiseUp',
+          event_label: 'Checkout Opened'
+        });
       });
 
-    });
+      FundraiseUp.on('donationComplete', function(data) {
+        gtag('event', 'purchase', {
+          transaction_id: data.donation.id,
+          value: data.donation.amount / 100,
+          currency: data.donation.currency
+        });
+      });
 
-  });
+    }
+
+    function waitForFundraiseUp() {
+      if (window.FundraiseUp && typeof FundraiseUp.on === "function") {
+        initFundraiseTracking();
+      } else {
+        setTimeout(waitForFundraiseUp, 200);
+      }
+    }
+
+    waitForFundraiseUp();
   </script>
 
 </body>
