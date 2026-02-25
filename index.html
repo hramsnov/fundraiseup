@@ -3,14 +3,24 @@
 <head>
 <meta charset="UTF-8">
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<!-- GTM -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];
+w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+j.async=true;
+j.src='https://www.googletagmanager.com/gtm.js?id=GTM-XXXXXXX'+dl;
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');
+</script>
+<!-- END GTM -->
+
 <script>
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-XXXXXXXXXX');
 </script>
 
+<!-- FundraiseUp -->
 <script>
 (function(w,d,s,n,a){
 if(!w[n]){
@@ -28,6 +38,7 @@ w[n]=o}
 </script>
 
 </head>
+
 <body>
 
 <a href="#XJKDHSTQ">Donate</a>
@@ -36,16 +47,23 @@ w[n]=o}
 function waitForFU() {
   if (window.FundraiseUp && typeof FundraiseUp.on === "function") {
 
-    FundraiseUp.on('checkoutOpen', function() {
-      gtag('event', 'checkout_open');
-    });
-
     FundraiseUp.on('donationComplete', function(data) {
-      gtag('event', 'purchase', {
-        transaction_id: data.donation.id,
-        value: data.donation.amount / 100,
-        currency: data.donation.currency
+
+      dataLayer.push({
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: data.donation.id,
+          value: data.donation.amount / 100,
+          currency: data.donation.currency,
+          items: [{
+            item_name: "Donation",
+            item_id: "donation",
+            price: data.donation.amount / 100,
+            quantity: 1
+          }]
+        }
       });
+
     });
 
   } else {
