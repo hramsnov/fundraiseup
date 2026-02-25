@@ -2,22 +2,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>Donation Test</title>
 
-<!-- GTM -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];
-w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
-var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-j.async=true;
-j.src='https://www.googletagmanager.com/gtm.js?id=GTM-MTNLXLVB'+dl;
-f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-MTNLXLVB');
-</script>
-<!-- END GTM -->
-
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4CFSHYMM3E"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-4CFSHYMM3E');
 </script>
 
 <!-- FundraiseUp -->
@@ -49,20 +42,19 @@ function waitForFU() {
 
     FundraiseUp.on('donationComplete', function(data) {
 
-      dataLayer.push({
-        event: 'purchase',
-        ecommerce: {
-          transaction_id: data.donation.id,
-          value: data.donation.amount / 100,
-          currency: data.donation.currency,
-          items: [{
-            item_name: "Donation",
-            item_id: "donation",
-            price: data.donation.amount / 100,
-            quantity: 1
-          }]
-        }
+      gtag('event', 'purchase', {
+        transaction_id: data.donation.id,
+        value: data.donation.amount / 100,
+        currency: data.donation.currency,
+        items: [{
+          item_name: "Donation",
+          item_id: "donation",
+          price: data.donation.amount / 100,
+          quantity: 1
+        }]
       });
+
+      console.log("Purchase sent to GA4");
 
     });
 
