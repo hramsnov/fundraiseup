@@ -2,59 +2,87 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Helping Hand Demo</title>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4CFSHYMM3E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <title>Helping Hand Donation Demo</title>
 
-  gtag('config', 'G-4CFSHYMM3E');
-</script>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
 </head>
 <body>
 
-<h1>Donation</h1>
+  <h1>Helping Hand Donation Demo</h1>
+  <p>This page demonstrates Fundraise Up + GA4 integration.</p>
 
-<!-- Fundraise Up script -->
-<script>
-(function(w,d,s,n,a){
-if(!w[n]){
-var l='call,catch,on,once,set,then,track'.split(','),i,
-o=function(n){return'function'==typeof n?o.l.push([arguments])&&o
-:function(){return o.l.push([n,arguments])&&o}},
-t=d.getElementsByTagName(s)[0],
-j=d.createElement(s);j.async=!0;
-j.src='https://cdn.fundraiseup.com/widget/'+a;
-t.parentNode.insertBefore(j,t);
-o.s=Date.now();o.v=4;o.h=w.location.href;o.l=[];
-for(i=0;i<7;i++)o[l[i]]=o(l[i]);
-w[n]=o}
-})(window,document,'script','FundraiseUp','AEMZUDUM');
-</script>
+  <!-- Fundraise Up Widget -->
+  <script>
+  (function(w,d,s,n,a){
+  if(!w[n]){
+  var l='call,catch,on,once,set,then,track'.split(','),i,
+  o=function(n){return'function'==typeof n?o.l.push([arguments])&&o
+  :function(){return o.l.push([n,arguments])&&o}},
+  t=d.getElementsByTagName(s)[0],
+  j=d.createElement(s);j.async=!0;
+  j.src='https://cdn.fundraiseup.com/widget/'+a;
+  t.parentNode.insertBefore(j,t);
+  o.s=Date.now();o.v=4;o.h=w.location.href;o.l=[];
+  for(i=0;i<7;i++)o[l[i]]=o(l[i]);
+  w[n]=o}
+  })(window,document,'script','FundraiseUp','AEMZUDUM');
+  </script>
 
-<!-- Button -->
-<a href="#XJKDHSTQ">Donate Now</a>
+  <!-- Donation Button -->
+  <a href="#XJKDHSTQ">Donate Now</a>
+
+  <br><br>
+
+  <!-- Safe demo button (если donationComplete не срабатывает) -->
+  <button onclick="simulatePurchase()">Simulate $700 Donation</button>
 
   <script>
-FundraiseUp.on('checkoutOpen', function() {
-  gtag('event', 'checkout_open', {
-    event_category: 'FundraiseUp',
-    event_label: 'Checkout Opened'
-  });
-});
-</script>
+  function simulatePurchase() {
+    gtag('event', 'purchase', {
+      transaction_id: 'TEST700',
+      value: 700,
+      currency: 'USD'
+    });
+  }
+  </script>
 
-<script>
-FundraiseUp.on('donationComplete', function(data) {
-  gtag('event', 'purchase', {
-    transaction_id: data.donation.id,
-    value: data.donation.amount,
-    currency: data.donation.currency
+  <!-- Event Tracking -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // Checkout open event
+    FundraiseUp.on('checkoutOpen', function() {
+      console.log("Checkout opened");
+
+      gtag('event', 'checkout_open', {
+        event_category: 'FundraiseUp',
+        event_label: 'Checkout Opened'
+      });
+    });
+
+    // Native donation complete event (работает только если есть backend confirmation)
+    FundraiseUp.on('donationComplete', function(data) {
+
+      console.log("Donation complete:", data);
+
+      gtag('event', 'purchase', {
+        transaction_id: data.donation.id,
+        value: data.donation.amount / 100,
+        currency: data.donation.currency
+      });
+
+    });
+
   });
-});
-</script>
-  
+  </script>
+
 </body>
 </html>
