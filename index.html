@@ -79,6 +79,22 @@ function waitForFU() {
   }
 }
 waitForFU();
+
+  FundraiseUp.on('donationComplete', function(data) {
+  dataLayer.push({
+    event: 'purchase',
+    ecommerce: {
+      transaction_id: data.donation.id,
+      value: data.donation.amount / 100,
+      currency: data.donation.currency,
+      items: [{
+        item_name: "Donation",
+        price: data.donation.amount / 100,
+        quantity: 1
+      }]
+    }
+  });
+});
 </script>
 
 </body>
