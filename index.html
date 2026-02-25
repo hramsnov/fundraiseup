@@ -37,5 +37,14 @@ w[n]=o}
 <!-- Button -->
 <a href="#XJKDHSTQ">Donate Now</a>
 
+  <script>
+FundraiseUp.on('checkoutOpen', function() {
+  gtag('event', 'checkout_open', {
+    event_category: 'FundraiseUp',
+    event_label: 'Checkout Opened'
+  });
+});
+</script>
+
 </body>
 </html>
