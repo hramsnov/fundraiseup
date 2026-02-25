@@ -46,5 +46,15 @@ FundraiseUp.on('checkoutOpen', function() {
 });
 </script>
 
+<script>
+FundraiseUp.on('donationComplete', function(data) {
+  gtag('event', 'purchase', {
+    transaction_id: data.donation.id,
+    value: data.donation.amount,
+    currency: data.donation.currency
+  });
+});
+</script>
+  
 </body>
 </html>
